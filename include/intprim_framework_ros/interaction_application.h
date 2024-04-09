@@ -15,13 +15,10 @@
 #include "devices/device_interface.h"
 #include "devices/robot_interface.h"
 #include "devices/predictor_interface.h"
-
 #include "interaction_core.h"
-
 #include "ros/ros.h"
 
 #include <std_msgs/Int32.h>
-
 
 /*!
     The InteractionApplication class provides a simple CLI application for running experiments.
@@ -54,6 +51,8 @@ private:
         none,
         lbr4,
         ur5,
+        hand6,
+        iiwa7,
         ur5l,
         ur5c
     };

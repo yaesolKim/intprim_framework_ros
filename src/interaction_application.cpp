@@ -6,6 +6,8 @@
 #ifdef IRL_ROBOTS_AVAILABLE
     #include "devices/lbr4.h"
     #include "devices/ur5.h"
+    #include "devices/iiwa7.h"
+    #include "devices/hand6.h"
 #endif
 
 #include <cmath>
@@ -175,6 +177,17 @@ InteractionApplication::DeviceInterfaceTypes InteractionApplication::string_to_d
     {
         new_device = InteractionApplication::DeviceInterfaceTypes::ur5;
     }
+
+    else if(device_name == "hand6")
+    {
+        new_device = InteractionApplication::DeviceInterfaceTypes::hand6;
+    }
+
+    else if(device_name == "iiwa7")
+    {
+        new_device = InteractionApplication::DeviceInterfaceTypes::iiwa7;
+    }
+
     else if(device_name == "ur5l")
     {
         new_device = InteractionApplication::DeviceInterfaceTypes::ur5l;
@@ -198,6 +211,12 @@ std::unique_ptr<DeviceInterface> InteractionApplication::create_device(DeviceInt
     switch(interface_type)
     {
         case InteractionApplication::DeviceInterfaceTypes::ur5:
+            device_interface = create_robot(interface_type);
+            break;
+        case InteractionApplication::DeviceInterfaceTypes::hand6:
+            device_interface = create_robot(interface_type);
+            break;
+        case InteractionApplication::DeviceInterfaceTypes::iiwa7:
             device_interface = create_robot(interface_type);
             break;
         case InteractionApplication::DeviceInterfaceTypes::ur5l:
@@ -230,6 +249,20 @@ std::unique_ptr<RobotInterface> InteractionApplication::create_robot(DeviceInter
         case InteractionApplication::DeviceInterfaceTypes::ur5l:
             #ifdef IRL_ROBOTS_AVAILABLE
                 robot_interface = std::unique_ptr<UR5Interface>(new UR5Interface(*m_handle, "observe_sim"));
+            #else
+                throw std::runtime_error("Experiment uses UR5LInterface but IRL robots unavailable.");
+            #endif
+            break;
+        case InteractionApplication::DeviceInterfaceTypes::hand6:
+            #ifdef IRL_ROBOTS_AVAILABLE
+                robot_interface = std::unique_ptr<hand6Interface>(new hand6Interface(*m_handle, "observe_sim"));
+            #else
+                throw std::runtime_error("Experiment uses hand6Interface but your robots unavailable.");
+            #endif
+            break;
+        case InteractionApplication::DeviceInterfaceTypes::iiwa7:
+            #ifdef IRL_ROBOTS_AVAILABLE
+                robot_interface = std::unique_ptr<IIWA7Interface>(new IIWA7Interface(*m_handle));
             #else
                 throw std::runtime_error("Experiment uses UR5LInterface but IRL robots unavailable.");
             #endif
@@ -299,7 +332,8 @@ void InteractionApplication::test_export_rosbag(const Experiment& experiment)
         std::this_thread::sleep_for(std::chrono::seconds(3));
 
         std::stringstream command;
-        command << "rosbag record -a -O " << get_path("", sub_action.prefix, ".bag");
+        // command << "rosbag record -a -O " << get_path("", sub_action.prefix, ".bag");
+        command << "rosbag record robot/iiwa7/state robot/hand6/state -O " << get_path("", sub_action.prefix, ".bag"); // state만 기록해도 될까?
         m_last_demonstration_name.assign(command.str().substr(20));
         command << " --duration=" << experiment.timeout;
         command << " __name:=mip_recorder &";
@@ -382,7 +416,7 @@ void InteractionApplication::end_demo_or_test(end_demo_signal sig)
     {
         send_demo_reset();
         // Wait for `reset_timeout` seconds (maximum) for the reset to finish
-        int reset_timeout = 8;
+        int reset_timeout = 40;//20;//8;
         if(wait_for_demo_reset(reset_timeout))
         {
             std::cout << "Demo Reset successfully.\n";
@@ -396,7 +430,7 @@ void InteractionApplication::end_demo_or_test(end_demo_signal sig)
 
     // Demo is no longer active
     m_demo_active.store(false);
-    std::cout << "Experiment Ended!\n";
+    std::cout << "Experiment Ended!\n\n";
 }
 
 void InteractionApplication::start_demo()
@@ -664,7 +698,8 @@ void InteractionApplication::train_export_rosbag(const Experiment& experiment)
         std::this_thread::sleep_for(std::chrono::seconds(3));
 
         std::stringstream command;
-        command << "rosbag record -a -O " << get_path("", sub_action.prefix, ".bag");
+        // command << "rosbag record -a -O " << get_path("", sub_action.prefix, ".bag");
+        command << "rosbag record robot/iiwa7/state robot/hand6/state -O " << get_path("", sub_action.prefix, ".bag"); // state만 기록해도 될까?
         m_last_demonstration_name.assign(command.str().substr(20));
         std::cout << "Last demonstration name: " << m_last_demonstration_name << std::endl;
         command << " --duration=" << experiment.timeout;
@@ -712,7 +747,8 @@ void InteractionApplication::train_export_rosbag_multiple_automated(const Experi
             std::this_thread::sleep_for(std::chrono::seconds(1));
 
             std::stringstream command;
-            command << "rosbag record -a -O " << get_path("", sub_action.prefix, ".bag");
+            // command << "rosbag record -a -O " << get_path("", sub_action.prefix, ".bag");
+            command << "rosbag record robot/iiwa7/state robot/hand6/state -O " << get_path("", sub_action.prefix, ".bag"); // state만 기록해도 될까?
             m_last_demonstration_name.assign(command.str().substr(20));
             std::cout << "Last demonstration name: " << m_last_demonstration_name << std::endl;
             command << " --duration=" << experiment.timeout;
@@ -1009,12 +1045,14 @@ void InteractionApplication::display_main_menu()
         {
             return;
         }
+
         else if(input == 'd')
         {
             std::stringstream command;
             command << "rosrun intprim_framework_ros dashboard_main.py &";
             std::system(command.str().c_str());
         }
+
         else
         {
             for(const auto& experiment : m_experiments)

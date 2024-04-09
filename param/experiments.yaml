@@ -15,8 +15,8 @@ experiments:
     timeout: 60 # In seconds
     sub_actions:
     -   prefix: "coppelia"
-        message: "UR5's will touch a random point in between them..."
+        message: "human hand and IIWA7 will touch a random point in between them..."
     devices:
-    -   "ur5l" # lead
-    -   "ur5c" # control
-    controller: "ur5c" # "none"
+    -   "hand6" # lead
+    -   "iiwa7" # control
+    controller: "iiwa7" # "none"

@@ -3,9 +3,8 @@
     <rosparam command="load" file="$(find intprim_framework_ros)/param/experiments.yaml" />
     <rosparam command="load" file="$(find intprim_framework_ros)/param/intprim_param.yaml" />
 
-    <include file="$(find irl_robot_drivers)/launch/coppelia_controller.launch" />
+    <include file="$(find irl_robot_drivers)/launch/coppelia_controller2.launch" />
 
     <node name="intprim_service_node" pkg="intprim_framework_ros" type="intprim_service.py" output="screen" respawn="true" />
-
     <node name="interaction_application_node" pkg="intprim_framework_ros" type="interaction_application" output="screen" required="true" />
 </launch>

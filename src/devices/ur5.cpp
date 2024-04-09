@@ -1,6 +1,5 @@
 /* @author Joseph Campbell <jacampb1@asu.edu>, Interactive Robotics Lab, Arizona State University */
 #include "devices/ur5.h"
-
 #include <boost/bind.hpp>
 #include <chrono>
 #include <regex>
@@ -9,6 +8,7 @@
 #include <thread>
 
 std::string UR5State::JOINT_NAMES[UR5State::NUM_JOINTS];
+
 double UR5State::JOINT_THRESHOLD = 0.0;
 
 UR5State::UR5State() :

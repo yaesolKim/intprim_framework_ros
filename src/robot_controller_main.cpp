@@ -5,6 +5,8 @@
 #ifdef IRL_ROBOTS_AVAILABLE
     #include "devices/ur5.h"
     #include "devices/lbr4.h"
+    #include "devices/hand6.h"
+    #include "devices/iiwa7.h"
 #endif
 
 
@@ -55,6 +57,24 @@ int main(int argc, char** argv)
             control_frequency = param_list[controller_type]["control_frequency"];
         #else
             throw std::runtime_error("Experiment uses LBR4Interface but IRL robots unavailable.");
+        #endif
+    }
+    else if(controller_type == "iiwa7")
+    {
+        #ifdef IRL_ROBOTS_AVAILABLE
+            robot_interface = std::unique_ptr<IIWA7Interface>(new IIWA7Interface(handle));
+            control_frequency = param_list[controller_type]["control_frequency"];
+        #else
+            throw std::runtime_error("Experiment uses IIWA7Interface but IRL robots unavailable.");
+        #endif
+    }
+    else if(controller_type == "hand6")
+    {
+        #ifdef IRL_ROBOTS_AVAILABLE
+            robot_interface = std::unique_ptr<hand6Interface>(new hand6Interface(handle, "regular"));
+            control_frequency = param_list[controller_type]["control_frequency"];
+        #else
+            throw std::runtime_error("Experiment uses hand6Interface but IRL robots unavailable.");
         #endif
     }
     else

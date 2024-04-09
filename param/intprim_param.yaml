@@ -70,26 +70,51 @@ bip:
     debug_directory: "<path>/debug"
     config_name: "Config1"
     primary: false
+    #####################################################################################
 -   id: 1
     name: "CoppeliaSim"
     modalities:
-    -   name: "ur5l"
-        indices: [0, 6]
+    -   name: "hand6"
+        indices: [0, 18]
         dof_names: [
-            "UR5l Pos 1",
-            "UR5l Pos 2",
-            "UR5l Pos 3",
-            "UR5l Pos 4",
-            "UR5l Pos 5",
-            "UR5l Pos 6"
+            "hand6 Pos 1",
+            "hand6 Pos 2",
+            "hand6 Pos 3",
+            "hand6 Pos 4",
+            "hand6 Pos 5",
+            "hand6 Pos 6",
+            "hand6 Pos 7",
+            "hand6 Pos 8",
+            "hand6 Pos 9",
+            "hand6 Pos 10",
+            "hand6 Pos 11",
+            "hand6 Pos 12",
+            "hand6 Pos 13",
+            "hand6 Pos 14",
+            "hand6 Pos 15",
+            "hand6 Pos 16",
+            "hand6 Pos 17",
+            "hand6 Pos 18"
         ]
         basis_model:
             type: "Gaussian"
-            degree: 7
+            degree: 18
             scale: 0.07
             start_phase: 0.0
             end_phase: 1.0
         scaling_groups : [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -103,15 +128,16 @@ bip:
         active_from: 0.0 # Each DoF will only be active when the estimated phase is between from/until. When inactive, it will not be perturbed by noise and the measurement noise will be increased.
         active_until: 1.01
     #--------------------------------------------------------------------------
-    -   name: "ur5c"
-        indices: [6, 12]
+    -   name: "iiwa7"
+        indices: [6, 13]
         dof_names: [
-            "UR5c Pos 1",
-            "UR5c Pos 2",
-            "UR5c Pos 3",
-            "UR5c Pos 4",
-            "UR5c Pos 5",
-            "UR5c Pos 6"
+            "iiwa7 Pos 1",
+            "iiwa7 Pos 2",
+            "iiwa7 Pos 3",
+            "iiwa7 Pos 4",
+            "iiwa7 Pos 5",
+            "iiwa7 Pos 6",
+            "iiwa7 Pos 7"
         ]
         basis_model:
             type: "Gaussian"
@@ -120,6 +146,7 @@ bip:
             start_phase: 0.0
             end_phase: 1.0
         scaling_groups : [
+            0,
             0,
             0,
             0,
@@ -155,9 +182,9 @@ bip:
     scale_observations: false # Perform basis standardization
     cyclical: false # If true, the phase will roll back to 0 once it is >= 1.
     debug: false
-    import_data: "<path_to_trained_model_dir>/trained_bip.bip"
-    observation_noise: "<path_to_observation_noise_dir>/observation_noise.noise"
-    mip_test_directory: "<path_to_recorded_rosbags_dir>"
-    debug_directory: "<path_to_debug_dir>"
+    import_data: "/home/glab/phri_ws/src/intprim_framework_ros/test2/trained_bip.bip"
+    observation_noise: "/home/glab/phri_ws/src/intprim_framework_ros/test2/observation_noise.noise"
+    mip_test_directory: "/home/glab/phri_ws/src/intprim_framework_ros/test2"
+    debug_directory: "/home/glab/phri_ws/src/intprim_framework_ros/test2/debug"
     config_name: "Config2"
     primary: true

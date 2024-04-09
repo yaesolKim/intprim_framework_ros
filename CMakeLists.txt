@@ -129,11 +129,15 @@ if(irl_robot_drivers_FOUND)
     list(APPEND CORE_SRC
         src/devices/lbr4.cpp
         src/devices/ur5.cpp
+        src/devices/hand6.cpp
+        src/devices/iiwa7.cpp
     )
 
     list(APPEND CONTROLLER_SRC
         src/devices/lbr4.cpp
         src/devices/ur5.cpp
+        src/devices/hand6.cpp
+        src/devices/iiwa7.cpp
     )
 endif()
 
